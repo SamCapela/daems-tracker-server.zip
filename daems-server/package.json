@@ -1,0 +1,8 @@
+{
+  "name": "daems-tracker-server",
+  "version": "1.0.0",
+  "description": "Backend pour Daems Live Tracker",
+  "dependencies": {
+    "@vercel/kv": "^1.0.0"
+  }
+}
