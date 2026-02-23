@@ -6,7 +6,7 @@ const kv = new Redis({ url: process.env.KV_REST_API_URL, token: process.env.KV_R
 
 const CLIENT_ID = process.env.TWITCH_CLIENT_ID;
 const CLIENT_SECRET = process.env.TWITCH_CLIENT_SECRET;
-const REDIRECT_URI = process.env.VERCEL_URL
+const REDIRECT_URI = 'https://daemsweb-igtm.vercel.app/api/callback';
   ? 'https://' + process.env.VERCEL_URL + '/api/callback'
   : 'http://localhost:3000/api/callback';
 
