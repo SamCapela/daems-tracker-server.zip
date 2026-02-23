@@ -1,7 +1,5 @@
 const CLIENT_ID = process.env.TWITCH_CLIENT_ID;
-const REDIRECT_URI = process.env.VERCEL_URL
-  ? 'https://' + process.env.VERCEL_URL + '/api/callback'
-  : 'http://localhost:3000/api/callback';
+const REDIRECT_URI = 'https://daemsweb-igtm.vercel.app/api/callback';
 
 export default function handler(req, res) {
   const authUrl = 'https://id.twitch.tv/oauth2/authorize'
