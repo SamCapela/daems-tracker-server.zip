@@ -1,9 +1,8 @@
 {
   "name": "daems-tracker-server",
   "version": "1.0.0",
-  "description": "Backend pour Daems Live Tracker",
+  "type": "module",
   "dependencies": {
-    "@vercel/kv": "^1.0.0",
     "@upstash/redis": "^1.28.0"
   }
 }
