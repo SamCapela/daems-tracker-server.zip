@@ -1,7 +1,8 @@
 // api/callback.js
 // Recoit le code Twitch, echange contre un token, redirige vers l'extension
 
-import { kv } from '@vercel/kv';
+import { Redis } from '@upstash/redis';
+const kv = new Redis({ url: process.env.KV_REST_API_URL, token: process.env.KV_REST_API_TOKEN });
 
 const CLIENT_ID = process.env.TWITCH_CLIENT_ID;
 const CLIENT_SECRET = process.env.TWITCH_CLIENT_SECRET;
