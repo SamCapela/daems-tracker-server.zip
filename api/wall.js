@@ -29,13 +29,13 @@ export default async function handler(req, res) {
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
   body {
-    background: transparent;
-    overflow: hidden;
-    width: 1920px;
-    height: 1080px;
-    transform-origin: top left;
-  }
-  #wall { position: relative; width: 1920px; height: 1080px; }
+  background: transparent;
+  overflow: hidden;
+  width: 300px;
+  height: 250px;
+  transform-origin: top left;
+}
+#wall { position: relative; width: 300px; height: 250px; }
 
   .emote-pop {
     position: absolute;
@@ -47,7 +47,7 @@ export default async function handler(req, res) {
     pointer-events: none;
   }
   .emote-pop .emoji {
-    font-size: 200px;
+    font-size: 80px;
     filter: drop-shadow(0 3px 10px rgba(0,0,0,0.7));
     animation: wiggle 0.4s ease-in-out 4;
   }
@@ -80,13 +80,6 @@ export default async function handler(req, res) {
 <body>
 <div id="wall"></div>
 <script>
-function resize() {
-  var scaleX = window.innerWidth / 1920;
-  var scaleY = window.innerHeight / 1080;
-  document.body.style.transform = 'scale(' + scaleX + ',' + scaleY + ')';
-}
-resize();
-window.addEventListener('resize', resize);
 
 var EMOTE_MAP = {
   heart:         '\u2764\uFE0F',
@@ -106,8 +99,8 @@ function spawn(emoteId, login) {
   var emoji = EMOTE_MAP[emoteId] || '\u2B50';
   var el = document.createElement('div');
   el.className = 'emote-pop';
-  var x = 60 + Math.random() * (1920 - 120);
-  var y = 1080 - 100;
+  var x = 60 + Math.random() * (300 - 120);
+  var y = 250 - 100;
   el.style.cssText = 'left:' + x + 'px;top:' + y + 'px';
   el.innerHTML = '<div class="emoji">' + emoji + '</div><div class="tag">' + login + '</div>';
   wall.appendChild(el);
