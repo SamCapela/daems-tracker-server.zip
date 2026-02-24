@@ -48,7 +48,7 @@ export default async function handler(req, res) {
     pointer-events: none;
   }
   .emote-pop .emoji {
-    font-size: 500px;
+    font-size: 20vw ;
     line-height: 1;
     filter: drop-shadow(0 3px 10px rgba(0,0,0,0.7));
     animation: wiggle 0.4s ease-in-out 4;
