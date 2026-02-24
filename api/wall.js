@@ -24,6 +24,7 @@ export default async function handler(req, res) {
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval'; script-src * 'unsafe-inline' 'unsafe-eval';">
 <title>Daems Emote Wall</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
