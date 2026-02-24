@@ -31,10 +31,11 @@ export default async function handler(req, res) {
   body {
     background: transparent;
     overflow: hidden;
-    width: 100vw;
-    height: 100vh;
+    width: 1920px;
+    height: 1080px;
+    transform-origin: top left;
   }
-  #wall { position: relative; width: 100%; height: 100%; }
+  #wall { position: relative; width: 1920px; height: 1080px; }
 
   .emote-pop {
     position: absolute;
@@ -65,8 +66,8 @@ export default async function handler(req, res) {
   }
 
   @keyframes floatUp {
-    0%   { opacity: 0; transform: translateY(0)    scale(0.4); }
-    12%  { opacity: 1; transform: translateY(-30px) scale(1.15); }
+    0%   { opacity: 0; transform: translateY(0)     scale(0.4); }
+    12%  { opacity: 1; transform: translateY(-30px)  scale(1.15); }
     75%  { opacity: 1; transform: translateY(-140px) scale(1); }
     100% { opacity: 0; transform: translateY(-190px) scale(0.85); }
   }
@@ -79,42 +80,51 @@ export default async function handler(req, res) {
 <body>
 <div id="wall"></div>
 <script>
-const EMOTE_MAP = {
-  heart:         '❤️',
-  poop:          '💩',
-  GG:            '🏆',
-  SLT:           '👋',
-  CAT:           '🐱',
-  DaemPeepoFire: '🔥',
-  noob:          '💀',
-  BYE:           '✌️',
+function resize() {
+  var scaleX = window.innerWidth / 1920;
+  var scaleY = window.innerHeight / 1080;
+  document.body.style.transform = 'scale(' + scaleX + ',' + scaleY + ')';
+}
+resize();
+window.addEventListener('resize', resize);
+
+var EMOTE_MAP = {
+  heart:         '\u2764\uFE0F',
+  poop:          '\uD83D\uDCA9',
+  GG:            '\uD83C\uDFC6',
+  SLT:           '\uD83D\uDC4B',
+  CAT:           '\uD83D\uDC31',
+  DaemPeepoFire: '\uD83D\uDD25',
+  noob:          '\uD83D\uDC80',
+  BYE:           '\u270C\uFE0F',
 };
 
-let lastTs = Date.now() - 5000;
-const wall = document.getElementById('wall');
+var lastTs = Date.now() - 5000;
+var wall = document.getElementById('wall');
 
 function spawn(emoteId, login) {
-  const emoji = EMOTE_MAP[emoteId] || '⭐';
-  const el = document.createElement('div');
+  var emoji = EMOTE_MAP[emoteId] || '\u2B50';
+  var el = document.createElement('div');
   el.className = 'emote-pop';
-  const x = 60 + Math.random() * (window.innerWidth - 120);
-  const y = window.innerHeight - 100;
+  var x = 60 + Math.random() * (1920 - 120);
+  var y = 1080 - 100;
   el.style.cssText = 'left:' + x + 'px;top:' + y + 'px';
   el.innerHTML = '<div class="emoji">' + emoji + '</div><div class="tag">' + login + '</div>';
   wall.appendChild(el);
   setTimeout(function() { el.remove(); }, 5000);
 }
 
-async function poll() {
-  try {
-    const r = await fetch('/api/wall?poll=1&since=' + lastTs);
-    const events = await r.json();
-    if (events.length) {
-      events.forEach(e => spawn(e.emote, e.login));
-      lastTs = Math.max(...events.map(e => e.ts));
-    }
-  } catch(e) {}
-  setTimeout(function() { poll(); }, 2000);
+function poll() {
+  fetch('/api/wall?poll=1&since=' + lastTs)
+    .then(function(r) { return r.json(); })
+    .then(function(events) {
+      if (events.length) {
+        events.forEach(function(e) { spawn(e.emote, e.login); });
+        lastTs = Math.max.apply(null, events.map(function(e) { return e.ts; }));
+      }
+    })
+    .catch(function() {})
+    .finally(function() { setTimeout(function() { poll(); }, 2000); });
 }
 
 poll();
