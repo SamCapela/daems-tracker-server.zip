@@ -12,7 +12,7 @@ export default async function handler(req, res) {
     var since = parseInt(req.query.since || '0');
     var items = await kv.lrange('emote-wall', 0, 49);
     var events = items
-      .map(i => { try { return JSON.parse(i); } catch { return null; } })
+      .map(i => { try { return typeof i === 'string' ? JSON.parse(i) : i; } catch { return null; } })
       .filter(Boolean)
       .filter(e => e.ts > since);
     return res.json(events);
