@@ -101,7 +101,7 @@ function spawn(emoteId, login) {
   el.style.cssText = 'left:' + x + 'px;top:' + y + 'px';
   el.innerHTML = '<div class="emoji">' + emoji + '</div><div class="tag">' + login + '</div>';
   wall.appendChild(el);
-  setTimeout(() => el.remove(), 5000);
+  setTimeout(function() { el.remove(); }, 5000);
 }
 
 async function poll() {
@@ -113,7 +113,7 @@ async function poll() {
       lastTs = Math.max(...events.map(e => e.ts));
     }
   } catch(e) {}
-  setTimeout(poll, 2000);
+  setTimeout(function() { poll(); }, 2000);
 }
 
 poll();
