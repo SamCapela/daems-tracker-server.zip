@@ -132,7 +132,9 @@ function poll() {
     .then(function(r) { return r.json(); })
     .then(function(events) {
       if (events.length) {
-        events.forEach(function(e) { spawn(e.emote, e.login); });
+        events.forEach(function(e, i) {
+          setTimeout(function() { spawn(e.emote, e.login); }, i * 600);
+        });
         lastTs = Math.max.apply(null, events.map(function(e) { return e.ts; }));
       }
     })
