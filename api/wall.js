@@ -110,6 +110,7 @@ window.addEventListener('resize', resize);
 
 var lastTs = Date.now() - 5000;
 var wall = document.getElementById('wall');
+var spawnOffset = 0;
 
 function spawn(emoteId, login) {
   var emoji = EMOTE_MAP[emoteId] || '\u2B50';
@@ -118,7 +119,8 @@ function spawn(emoteId, login) {
 
   // Spawn aléatoire dans la zone de la cam
   var x = CAM_X + Math.random() * (CAM_W - 80);
-  var y = CAM_Y - 20 + (Math.random() * 40 - 20);
+  spawnOffset = (spawnOffset + 1) % 3;
+  var y = CAM_Y - 20 - (spawnOffset * 80);
 
   el.style.left = x + 'px';
   el.style.top  = y + 'px';
