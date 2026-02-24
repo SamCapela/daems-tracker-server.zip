@@ -118,7 +118,7 @@ function spawn(emoteId, login) {
 
   // Spawn aléatoire dans la zone de la cam
   var x = CAM_X + Math.random() * (CAM_W - 80);
-  var y = CAM_Y - 20;
+  var y = CAM_Y - 20 + (Math.random() * 40 - 20);
 
   el.style.left = x + 'px';
   el.style.top  = y + 'px';
