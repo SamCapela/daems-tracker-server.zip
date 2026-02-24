@@ -1,6 +1,6 @@
 // api/wall.js
-// Mur d'émotes pour OBS — Browser Source
-// Les émotes apparaissent à taille fixe dans la zone définie par la taille de la fenêtre OBS
+// Mur d'émotes pour OBS — Browser Source 1920x1080
+// Les émotes spawent uniquement dans la zone de la cam de Daems
 
 import { kv } from '@vercel/kv';
 
@@ -29,13 +29,14 @@ export default async function handler(req, res) {
   body {
     background: transparent;
     overflow: hidden;
-    width: 100vw;
-    height: 100vh;
+    width: 1920px;
+    height: 1080px;
+    transform-origin: top left;
   }
   #wall {
     position: relative;
-    width: 100%;
-    height: 100%;
+    width: 1920px;
+    height: 1080px;
   }
 
   .emote-pop {
@@ -48,7 +49,7 @@ export default async function handler(req, res) {
     pointer-events: none;
   }
   .emote-pop .emoji {
-    font-size: 20vw ;
+    font-size: 120px;
     line-height: 1;
     filter: drop-shadow(0 3px 10px rgba(0,0,0,0.7));
     animation: wiggle 0.4s ease-in-out 4;
@@ -57,9 +58,9 @@ export default async function handler(req, res) {
     background: rgba(0,0,0,0.75);
     color: white;
     font-family: 'Segoe UI', sans-serif;
-    font-size: 14px;
+    font-size: 18px;
     font-weight: 700;
-    padding: 3px 10px;
+    padding: 4px 12px;
     border-radius: 20px;
     white-space: nowrap;
     border: 1px solid rgba(145,71,255,0.5);
@@ -69,8 +70,8 @@ export default async function handler(req, res) {
   @keyframes floatUp {
     0%   { opacity: 0; transform: translateY(0)     scale(0.4); }
     12%  { opacity: 1; transform: translateY(-30px)  scale(1.1); }
-    75%  { opacity: 1; transform: translateY(-160px) scale(1); }
-    100% { opacity: 0; transform: translateY(-220px) scale(0.9); }
+    75%  { opacity: 1; transform: translateY(-200px) scale(1); }
+    100% { opacity: 0; transform: translateY(-280px) scale(0.9); }
   }
   @keyframes wiggle {
     0%,100% { transform: rotate(-10deg); }
@@ -81,6 +82,12 @@ export default async function handler(req, res) {
 <body>
 <div id="wall"></div>
 <script>
+// ── ZONE DE LA CAM DE DAEMS (en pixels 1920x1080) ──
+var CAM_X = 0;     // bord gauche
+var CAM_Y = 780;   // bord haut de la cam
+var CAM_W = 290;   // largeur
+var CAM_H = 300;   // hauteur
+
 var EMOTE_MAP = {
   heart:         '\u2764\uFE0F',
   poop:          '\uD83D\uDCA9',
@@ -92,6 +99,15 @@ var EMOTE_MAP = {
   BYE:           '\u270C\uFE0F',
 };
 
+// Scale la page pour remplir la fenêtre OBS
+function resize() {
+  var scaleX = window.innerWidth  / 1920;
+  var scaleY = window.innerHeight / 1080;
+  document.body.style.transform = 'scale(' + scaleX + ',' + scaleY + ')';
+}
+resize();
+window.addEventListener('resize', resize);
+
 var lastTs = Date.now() - 5000;
 var wall = document.getElementById('wall');
 
@@ -100,9 +116,9 @@ function spawn(emoteId, login) {
   var el = document.createElement('div');
   el.className = 'emote-pop';
 
-  // Spawn aléatoire dans toute la largeur de la zone, en bas
-  var x = Math.random() * (window.innerWidth - 120) + 10;
-  var y = window.innerHeight - 20;
+  // Spawn aléatoire dans la zone de la cam
+  var x = CAM_X + Math.random() * (CAM_W - 80);
+  var y = CAM_Y + CAM_H - 20;
 
   el.style.left = x + 'px';
   el.style.top  = y + 'px';
