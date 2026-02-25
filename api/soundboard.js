@@ -19,6 +19,27 @@ export default async function handler(req, res) {
     height: 200px;
     font-family: 'Segoe UI', sans-serif;
   }
+  #activate {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.85);
+    z-index: 99;
+  }
+  #activate button {
+    background: #9147ff;
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  #activate button:hover { background: #6c31c9; }
   #toast {
     position: fixed;
     bottom: 20px;
@@ -44,9 +65,16 @@ export default async function handler(req, res) {
 </style>
 </head>
 <body>
+
+<!-- Overlay cliquable pour débloquer l'audio (obligatoire navigateur) -->
+<div id="activate">
+  <button onclick="unlock()">🔊 Activer le son</button>
+</div>
+
 <div id="toast"></div>
 <script>
-var SERVER = '';  // même domaine, pas besoin de préfixe
+var SERVER = '';
+var audioUnlocked = false;
 
 var SOUND_LABELS = {
   pet:         '🐾 Pet',
@@ -71,7 +99,6 @@ function showToast(label, login) {
 }
 
 function playSound(soundId, login) {
-  // Les MP3 sont dans /public/sounds/ sur Vercel
   var audio = new Audio('/sounds/' + soundId + '.mp3');
   audio.volume = 1.0;
   audio.play().catch(function(e) {
@@ -81,13 +108,25 @@ function playSound(soundId, login) {
   console.log('[Soundboard] Joue:', soundId, 'pour', login);
 }
 
+function unlock() {
+  // Jouer un silence pour débloquer le contexte audio
+  var silent = new Audio('data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA');
+  silent.play().then(function() {
+    audioUnlocked = true;
+    document.getElementById('activate').style.display = 'none';
+    console.log('[Soundboard] Audio débloqué, polling démarré');
+    poll();
+  }).catch(function(e) {
+    console.error('Unlock failed:', e);
+  });
+}
+
 function poll() {
   fetch('/api/sound?next=1')
     .then(function(r) { return r.json(); })
     .then(function(data) {
       if (data.sound) {
         playSound(data.sound, data.login || 'Anonyme');
-        // Repoll rapidement si potentiellement d'autres sons en attente
         setTimeout(poll, 500);
       } else {
         setTimeout(poll, 2000);
@@ -97,8 +136,6 @@ function poll() {
       setTimeout(poll, 5000);
     });
 }
-
-poll();
 </script>
 </body>
 </html>`);

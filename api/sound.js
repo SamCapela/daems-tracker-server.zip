@@ -6,7 +6,7 @@ import { Redis } from '@upstash/redis';
 const kv = new Redis({ url: process.env.KV_REST_API_URL, token: process.env.KV_REST_API_TOKEN });
 
 const VALID_SOUNDS = ['pet', 'pig', 'coq', 'first_blood', 'gg', 'screamer', 'thank_you'];
-const SOUND_COOLDOWN_MS = 3600 * 1000; // 1 heure
+const SOUND_COOLDOWN_MS = 5 * 1000; // 5s (TEST) — remettre 3600 * 1000 en prod
 
 async function getSession(token) {
   if (!token) return null;
