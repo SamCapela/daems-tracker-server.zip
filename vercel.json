@@ -1,7 +1,8 @@
 {
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/$1" },
-    { "source": "/(.*)", "destination": "/api/$1" }
+    { "source": "/api/:path*", "destination": "/api/:path*" },
+    { "source": "/sounds/:path*", "destination": "/sounds/:path*" },
+    { "source": "/:path*", "destination": "/api/:path*" }
   ],
   "headers": [
     {
@@ -12,6 +13,23 @@
           "value": "default-src * 'unsafe-inline' 'unsafe-eval'; script-src * 'unsafe-inline' 'unsafe-eval';"
         }
       ]
+    },
+    {
+      "source": "/api/soundboard",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src * 'unsafe-inline' 'unsafe-eval'; media-src * blob: data:; script-src * 'unsafe-inline' 'unsafe-eval';"
+        }
+      ]
+    },
+    {
+      "source": "/sounds/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Cache-Control", "value": "public, max-age=86400" }
+      ]
     }
   ]
 }
+

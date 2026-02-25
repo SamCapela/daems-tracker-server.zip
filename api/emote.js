@@ -1,7 +1,8 @@
 // api/emote.js
 // POST /api/emote — reçoit une émote envoyée par un viewer et la publie dans le mur
 
-import { kv } from '@vercel/kv';
+import { Redis } from '@upstash/redis';
+const kv = new Redis({ url: process.env.KV_REST_API_URL, token: process.env.KV_REST_API_TOKEN });
 
 const VALID_EMOTES = ['heart', 'poop', 'GG', 'SLT', 'CAT', 'DaemPeepoFire', 'noob', 'BYE'];
 
